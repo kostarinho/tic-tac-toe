@@ -8,12 +8,7 @@
 //     }
 //  )
 
-//  export const history = (state) => state?.history;
-
-// export const stepNumber = (state) => state?.stepNumber;
-
-// export const xIsNext = (state) => state?.xIsNext;
-
+import { reducer } from "../../models/tic-tac-toe/reducer";
 
 //  init the state ----------------------------------
 // constructor(props) {
@@ -30,7 +25,7 @@
 
 // const JumpTo = (move) => {
 //     setValues({
-//         ...values,  
+//         ...values,
 //         stepNumber: move,
 //         xIsNext: (move % 2) ===0
 //     })
@@ -55,7 +50,6 @@
 //     }
 //     squares[i] = values.xIsNext ? 'X' : 'O';
 
-
 //     setValues({
 //         ...values,
 //         history: history.concat([{
@@ -65,7 +59,6 @@
 //         xIsNext: !values.xIsNext,
 //     })
 
-    
 //     ---------------------------------
 //     this.setState({
 //         history: history.concat([{
@@ -97,8 +90,6 @@
 
 //   const history = this.state.history;
 
-
-
 // import React, { useReducer, useContext } from 'react';
 // import { jumpTo, move } from '../../models/tic-tac-toe/actions';
 // import { initialState, reducer } from '../../models/tic-tac-toe/reducer';
@@ -107,7 +98,6 @@
 // const Context = React.createContext()
 // const ContextJumpTo = React.createContext()
 // const ContextHandleClick = React.createContext()
-
 
 // export function useMyContext() {
 //     return useContext(Context)
@@ -125,7 +115,6 @@
 //     const current = history[stepNumber];
 //     const winner = calculateWinner(current.squares);
 
-
 //     const JumpTo = (move) => dispatch(jumpTo(move));
 
 //     const handleClick = (i) => {
@@ -137,7 +126,6 @@
 
 //         dispatch(move({ squares }))
 //     }
-
 
 //     return (
 //         <Context.Provider value={values}>
@@ -152,19 +140,10 @@
 
 // }
 
-
-
-
-
-
-
-
-
-
-
+//Με αυτο το τροπο δεν γινεται κανενας υπολογισμος μεσα στο μεσα στο view και ετσι
+//θα ειναι ανεξαρτητα τα view απο τις υπολοιπες πραξεις που γινονται μεσα στη javascript
 
 //---------------------------
-
 
 // import { useReducer, useContext } from 'react';
 // // import { jumpTo, move } from '../../models/tic-tac-toe/actions';
@@ -175,11 +154,10 @@
 // import './game.css';
 // import { stepNumber } from './tests';
 
-
 // // export const GameContext = createContext(initialState);
 
 // const Game = () => {
-    
+
 //     // const [state, dispatch] = useReducer(reducer, initialState)
 
 //     // const { history, stepNumber, xIsNext , current } = state;
@@ -213,14 +191,13 @@
 
 //     // const status =
 //     // state.winner
-//     //  ? 'Winner: ' + state.winner 
+//     //  ? 'Winner: ' + state.winner
 //     //  : 'Next player: ' + (xIsNext ? 'X' : 'O');
 
-
 //      const { state, handleClick, status, moves} = useContext(GameContext);
-     
+
 //     return (
-        
+
 //         // <GameContext.Provider value={{ squares }}>
 //             <div className="game">
 //                 <div className="game-board">
@@ -239,3 +216,52 @@
 // }
 
 // export default Game;
+
+// const GameContainer = ({ history, xIsNext, winner, jumpTo }) => {
+//     const JumpTo = (move) => jumpTo(move);
+//     return (
+//       <Game winner={winner} history={history} xIsNext={xIsNext} JumpTo={JumpTo} />
+//     );
+//   };
+
+//   const mapStateToProps = (state) => ({
+//     history: history(state),
+//     xIsNext: xIsNext(state),
+//     winner: winner(state),
+//   });
+
+//   const mapDispatchToProps = (dispatch) => ({
+//     jumpTo: (payload) => dispatch(jumpTo(payload)),
+//   });
+
+//   export default connect(mapStateToProps, mapDispatchToProps)(GameContainer);
+
+/**
+ * -------------------------------------------------------------------
+ */
+
+const reduce = (list, reducer, initalValue) => {
+  let acc = initalValue;
+  for (let i = 0; i < list.length; i++) {
+    acc = reducer(acc, list[i], i, list);
+  }
+};
+
+const map = (list, project) =>
+  reduce(
+    list,
+    (newList, el) => [...newList, project(el, newList.length, list)],
+    []
+  );
+
+const filter = (list, predicate) =>
+  reduce(
+    list,
+    (newList, el) => {
+      if (predicate(el, newList.length, list)) {
+        return [...newList, el];
+      }
+      return [...newList];
+    },
+    []
+  );
